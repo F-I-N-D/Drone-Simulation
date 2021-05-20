@@ -6,6 +6,7 @@ public class PixelPosition : MonoBehaviour
 {
     public Transform drone;
     Camera cam;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -16,6 +17,6 @@ public class PixelPosition : MonoBehaviour
     void Update()
     {
         Vector3 screenPos = cam.WorldToScreenPoint(drone.position);
-        Debug.Log("target is " + screenPos.x + " pixels from the left");
+        Debug.Log( screenPos.x );
     }
 }
