@@ -24,8 +24,8 @@ public class PixelPosition : MonoBehaviour
             foreach (GameObject drone in ServerConn.drones)
             {
                 Vector3 screenPos =  cam.WorldToScreenPoint(drone.transform.position);
-               Debug.Log("drone" + drone.GetComponent<HardwareDrone>().id + ":    " + (int) screenPos.x + " pixels from the left");
-            Debug.Log("drone" + drone.GetComponent<HardwareDrone>().id + ":    " + (int) screenPos.y + " pixels from the above");
+              // Debug.Log("drone" + drone.GetComponent<HardwareDrone>().id + ":    " + (int) screenPos.x + " pixels from the left");
+            //Debug.Log("drone" + drone.GetComponent<HardwareDrone>().id + ":    " + (int) screenPos.y + " pixels from the above");
         }
         
     }
