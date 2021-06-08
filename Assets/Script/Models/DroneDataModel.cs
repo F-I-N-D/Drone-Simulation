@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace DroneInfo
+namespace Server.Models
 {
-    public class DroneData 
+    public class DroneDataModel
     {
         public string droneId { get; set; }
         public bool master { get; set; }
