@@ -5,20 +5,20 @@ using System.Collections;
 using System.Collections.Generic;
 using TinyJson;
 using Server.Models;
-
+using System.Text;
 namespace Server
 {
     public class Socket
     {
-        public static string Server { get; }
-        public static int Port { get; }
+        private string Server;
+        private int Port;
         private static NetworkStream Stream;
         private static TcpClient Client;
 
         public Socket(string server, int port)
         {
-            Server = server
-            Port = port
+            Server = server;
+            Port = port;
         }
 
         public bool Connect()
@@ -43,43 +43,44 @@ namespace Server
 
         public List<DroneDataModel> GetSoftwareDrones()
         {
-            command = new CommandModel{
+            var command = new CommandModel
+            {
                 command = "getSoftwareDrones"
             };
             
             SendMessage(command);
             string message = RecieveMessage();
-            return JSONParser.FromJson<List<DroneData>>(message);
+            return JSONParser.FromJson<List<DroneDataModel>>(message);
         }
 
         public List<DroneDataModel> GetHardwareDrones()
         {
-            command = new CommandModel{
+            var command = new CommandModel{
                 command = "getHardwareDrones"
             };
             
             SendMessage(command);
             string message = RecieveMessage();
-            return JSONParser.FromJson<List<DroneData>>(message);
+            return JSONParser.FromJson<List<DroneDataModel>>(message);
         }
 
-        public List<DroneVelocityModel> GetSoftwareDroneVelocity(string droneId)
+        public DroneVelocityModel GetSoftwareDroneVelocity(string droneId)
         {
-            command = new CommandModel{
+            var command = new CommandModel {
                 command = "getSoftwareDroneVelocity",
-                droneId
+               droneId  = droneId
             };
             
             SendMessage(command);
             string message = RecieveMessage();
-            return JSONParser.FromJson<List<DroneVelocityModel>>(message);
+            return JSONParser.FromJson<DroneVelocityModel>(message);
         }
 
         public bool ConnectSoftwareDrone(string droneId)
         {
-            command = new CommandModel{
+            var command = new CommandModel{
                 command = "connectSoftwareDrone",
-                droneId
+                droneId =droneId
             };
             
             SendMessage(command);
@@ -89,9 +90,9 @@ namespace Server
 
         public bool SetSoftwareDrone(string droneId, DroneUpdateModel updateData)
         {
-            command = new CommandModel{
+            var command = new CommandModel{
                 command = "setSoftwareDrone",
-                droneId,
+                droneId = droneId,
                 data = updateData
             };
             
@@ -106,7 +107,7 @@ namespace Server
             {
                 string message = JSONWriter.ToJson(command);
                 Byte[] data = Encoding.ASCII.GetBytes(message);
-                stream.Write(data, 0, data.Length);
+                Stream.Write(data, 0, data.Length);
                 return true;
             }
             catch(Exception e)
@@ -122,7 +123,7 @@ namespace Server
             {
                 Byte[] data = new Byte[4096];
                 String responseData = String.Empty;
-                Int32 bytes = stream.Read(data, 0, data.Length);
+                Int32 bytes = Stream.Read(data, 0, data.Length);
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);         
                 return responseData;
             }
@@ -136,7 +137,7 @@ namespace Server
         public void Disconnect()
         {
             Stream.Close();
-            Cleint.Close();
+            Client.Close();
         }
     }
 }

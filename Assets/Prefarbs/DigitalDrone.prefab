@@ -192,7 +192,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f78b961101c4c34ebce614feb1fd658, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  id: 
   laserDown: 50
+  speed: 0.15
 --- !u!1 &2352174044697579706
 GameObject:
   m_ObjectHideFlags: 0
@@ -304,4 +306,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ldr: {fileID: 8400000, guid: a4c82bf16b8cb18439125af969ea9d15, type: 2}
   lightLevel: 0
-  light: 0

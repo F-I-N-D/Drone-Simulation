@@ -6,7 +6,6 @@ public class LDR : MonoBehaviour
 {
     public RenderTexture ldr;
     public float lightLevel;
-    public int light;
 
     // Update is called once per frame
     void Update()

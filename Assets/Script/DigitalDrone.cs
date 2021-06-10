@@ -5,8 +5,9 @@ using UnityEngine;
 public class DigitalDrone : MonoBehaviour
 {
     RaycastHit hit;
-    
+    public string id;
     public float laserDown = 100f;
+    public float speed;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,5 +23,7 @@ public class DigitalDrone : MonoBehaviour
             Debug.DrawRay(transform.position, -transform.up, Color.green);
           //Debug.Log(groundDistance);
         }
+
+        
     }
 }

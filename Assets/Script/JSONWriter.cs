@@ -13,7 +13,7 @@ namespace TinyJson
     //- Will only output public fields and property getters on objects
     public static class JSONWriter
     {
-        public static string ToJson(object item)
+        public static string ToJson(this object item)
         {
             StringBuilder stringBuilder = new StringBuilder();
             AppendValue(stringBuilder, item);

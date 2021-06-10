@@ -12,153 +12,107 @@ using System;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Threading;
-using DroneInfo;
-using TinyJson;
 
+using Server.Models;
 namespace Server
 {
    
     public class ServerConn : MonoBehaviour
     {
-        DroneData droneData;
-        [ThreadStatic] static Stack<List<string>> splitArrayPool;
-        [ThreadStatic] static StringBuilder stringBuilder;
-        [ThreadStatic] static Dictionary<Type, Dictionary<string, FieldInfo>> fieldInfoCache;
-        [ThreadStatic] static Dictionary<Type, Dictionary<string, PropertyInfo>> propertyInfoCache;
-        // Start is calle
-        string server = "145.137.51.223";
-        int portnumber = 8000;
-        
-        string message = "{\"command\":\"getHardwareDrones\" }";
+        private int port = 8000;
+        private string server = "145.137.51.223";
+        Socket socket;
         // before the first frame update
         //private HardwareDrone hd;
         public GameObject HardwareDrone;
+        public GameObject digitalDrone;
+        public int borderx = 300;
+        public int bordery = 200;
+        
         public int droneCount;
         NetworkStream stream;
-        public static List<GameObject> drones = new List<GameObject>();
-        void Awake()
-        {
-            //for (int i = 0; i < droneCount; i++)
-            //{
-            //    GameObject hd = Instantiate(HardwareDrone, new Vector3(i, 0, 0), transform.rotation);
-            //    hd.GetComponent<HardwareDrone>().id = i.ToString();
-            //    drones.Add(hd);
-            //}
-
-
-        }
+        public static List<GameObject> hardwareDrones = new List<GameObject>();
+        public static List<GameObject> softwareDrones = new List<GameObject>();
 
         void Start()
         {
-            Connection(server,portnumber);
-            Debug.Log("connected");
-            SendMessage(message);
-            Thread.Sleep(1000);
-            SetHardwareDrone();
+            socket = new Socket(server,port);
+            socket.Connect();
+            CreateSoftwareDrone();
+            CreateHardwareDrone();
+            foreach (var drone in softwareDrones)
+            {
+                while (!socket.ConnectSoftwareDrone(drone.GetComponent<DigitalDrone>().id))
+                {
+                    Thread.Sleep(500);
+                }
+            }
         }
         void Update(){
-           
-                //Thread.Sleep(1000);
-                //RecieveMessage();
-                MoveHardwareDrone();
-            
+            MoveSoftwareDrone();
+            MoveHardwareDrone();
         }
 
-        private void ClientSocket(string server_, int portnumber_, string message_){
-           
-                //stream.Close();
-                //client.Close(); 
-            
-        }
-         public void Connection(string server_, int portnumber_)
+
+        public void CreateHardwareDrone()
         {
-            try
+            foreach (var drone in socket.GetHardwareDrones())
             {
-
-                TcpClient client = new TcpClient(server_, portnumber_);
-
-                stream = client.GetStream();
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine("ArgumentNullException: {0}", e);
-            }
-            catch (SocketException e)
-            {
-                Console.WriteLine("SocketException: {0}", e);
-            }
-        }
-
-        public void SendMessage(string message_)
-        {
-            try
-            {
-                Byte[] data = Encoding.ASCII.GetBytes(message_);
-                // Buffer to store the response bytes.
-                stream.Write(data, 0, data.Length);
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine("Exception: {0}", e);
-            }
-        }
-
-        public string RecieveMessage()
-        {
-            try
-            {
-                
-                Byte[] data = new Byte[4096];
-                // String to store the response ASCII representation.
-                String responseData = String.Empty;
-
-                // Read the first batch of the TcpServer response bytes.
-                Int32 bytes = stream.Read(data, 0, data.Length);
-                
-                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                
-               // Debug.Log(responseData);
-                
-                return responseData;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Exception: {0}", e);
-                return null;
-            }
-        }
-
-        public void SetHardwareDrone()
-        {
-
-            //Debug.Log(JSONParser.FromJson<List<DroneData>>(RecieveMessage()).ToString());
-            foreach(DroneData drone in JSONParser.FromJson<List<DroneData>>(RecieveMessage()))
-            {
-                Debug.Log(drone.droneId);
-                 GameObject hd = Instantiate(HardwareDrone, new Vector3(drone.locationX, drone.locationY, drone.locationZ), transform.rotation);
+                GameObject hd = Instantiate(HardwareDrone, new Vector3(drone.locationX/100.0f, drone.locationZ/50.0f, 10.8f - drone.locationY/100.0f), transform.rotation);
                 hd.GetComponent<HardwareDrone>().id = drone.droneId;
-                drones.Add(hd);
+                hardwareDrones.Add(hd);
             }
-
-
-
         }
 
         public void MoveHardwareDrone()
         {
-            SendMessage(message);
-            Debug.Log(JSONParser.FromJson<List<DroneData>>(RecieveMessage()).ToString());
-            foreach (DroneData drone in JSONParser.FromJson<List<DroneData>>(RecieveMessage()))
+            foreach (var drone in socket.GetHardwareDrones())
             {
-                GameObject iets = drones.Find(hardwareDrone => hardwareDrone.GetComponent<HardwareDrone>().id == drone.droneId);
-                iets.transform.position += new Vector3(drone.locationX, drone.locationY, drone.locationZ);
-
+                GameObject hwDrone = hardwareDrones.Find(hardwareDrone => hardwareDrone.GetComponent<HardwareDrone>().id == drone.droneId);
+                hwDrone.transform.position = new Vector3(drone.locationX / 100.0f, drone.locationZ/50.0f, 10.8f - drone.locationY / 100.0f);
+                hwDrone.transform.rotation = new Quaternion(0,(float)drone.direction,0,0);
             }
         }
 
-        public void SetSoftwareDrone()
+        public void CreateSoftwareDrone()
         {
+            System.Random rand = new System.Random();
+            foreach(var drone in socket.GetSoftwareDrones())
+            {
+                float randomX = rand.Next(borderx, 1919-borderx)/100.0f;
+                float randomZ = rand.Next(bordery, 1079-bordery)/100.0f;
+                GameObject di = (GameObject)Instantiate(digitalDrone, new Vector3(randomX, drone.locationY, randomZ ), transform.rotation);
+                di.GetComponent<DigitalDrone>().id = drone.droneId;
+                softwareDrones.Add(di);
+            }
+        }
 
+        public void SetSoftwareDrone(GameObject drone)
+        {
+            var newData = new DroneUpdateModel
+            {
+                locationX = (int)(drone.GetComponent<DigitalDrone>().transform.position.x * 100.0f),
+                locationY = (int)((10.8 - drone.GetComponent<DigitalDrone>().transform.position.z) * 100.0f),
+                locationZ = (int)(drone.GetComponent<DigitalDrone>().transform.position.y * 50.0f),
+                ldr = drone.GetComponentInChildren<LDR>().lightLevel,
+                isFlying = true
+            };
+            socket.SetSoftwareDrone(drone.GetComponent<DigitalDrone>().id, newData);
+        }
+
+        public void MoveSoftwareDrone()
+        {
+            foreach (var drone in socket.GetSoftwareDrones())
+            {
+                GameObject swDrone = softwareDrones.Find(digitalDrone => digitalDrone.GetComponent<DigitalDrone>().id == drone.droneId);
+                swDrone.GetComponent<DigitalDrone>().transform.position = new Vector3(swDrone.GetComponent<DigitalDrone>().transform.position.x, drone.locationZ/50.0f, swDrone.GetComponent<DigitalDrone>().transform.position.z);
+            }
+                foreach (var drone in softwareDrones)
+            {
+                var velDrone = socket.GetSoftwareDroneVelocity(drone.GetComponent<DigitalDrone>().id);
+                drone.transform.Translate(-drone.GetComponent<DigitalDrone>().speed * velDrone.velocityX,0, -drone.GetComponent<DigitalDrone>().speed * velDrone.velocityY);
+                SetSoftwareDrone(drone);
+            }
         }
        
     }

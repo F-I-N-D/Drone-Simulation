@@ -11,23 +11,25 @@ public class PixelPosition : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        
+        
         
         //ShowSecondDisplay();
         cam = GetComponent<Camera>();
+        cam.aspect = 16.0f / 9.0f;
     }
 
     // Update is called once per frame
     void Update()
     {
        
-            foreach (GameObject drone in ServerConn.drones)
+            foreach (GameObject drone in ServerConn.hardwareDrones)
             {
                 Vector3 screenPos =  cam.WorldToScreenPoint(drone.transform.position);
-              // Debug.Log("drone" + drone.GetComponent<HardwareDrone>().id + ":    " + (int) screenPos.x + " pixels from the left");
-            //Debug.Log("drone" + drone.GetComponent<HardwareDrone>().id + ":    " + (int) screenPos.y + " pixels from the above");
+            //Debug.Log("drone" + drone.GetComponent<DigitalDrone>().id + ":    " + (int)(screenPos.x) + " pixels from the left");
+            //Debug.Log("drone" + drone.GetComponent<DigitalDrone>().id + ":    " + (int)(screenPos.y) + " pixels from the above");
         }
-        
+
     }
 
     void SoftDronePos()
