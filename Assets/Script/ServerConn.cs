@@ -36,7 +36,7 @@ namespace Server
 
         void Start()
         {
-            socket = new Socket(server,port);
+            socket = new Socket(server, port);
             socket.Connect();
             CreateSoftwareDrone();
             CreateHardwareDrone();
@@ -60,6 +60,8 @@ namespace Server
             {
                 GameObject hd = Instantiate(HardwareDrone, new Vector3(drone.locationX/100.0f, drone.locationZ/50.0f, 10.8f - drone.locationY/100.0f), transform.rotation);
                 hd.GetComponent<HardwareDrone>().id = drone.droneId;
+                hd.GetComponentInChildren<FrontLed>().colorFront = drone.colorFront;
+                hd.GetComponentInChildren<BackLed>().colorBack = drone.colorBack;
                 hardwareDrones.Add(hd);
             }
         }
@@ -83,6 +85,8 @@ namespace Server
                 float randomZ = rand.Next(bordery, 1079-bordery)/100.0f;
                 GameObject di = (GameObject)Instantiate(digitalDrone, new Vector3(randomX, drone.locationY, randomZ ), transform.rotation);
                 di.GetComponent<DigitalDrone>().id = drone.droneId;
+                di.GetComponentInChildren<FrontLed>().colorFront = drone.colorFront;
+                di.GetComponentInChildren<BackLed>().colorBack = drone.colorBack;
                 softwareDrones.Add(di);
             }
         }
