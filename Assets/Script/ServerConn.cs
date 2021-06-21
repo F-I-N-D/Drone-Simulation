@@ -24,7 +24,7 @@ namespace Server
         Socket socket;
         // before the first frame update
         //private HardwareDrone hd;
-        public GameObject HardwareDrone;
+        public GameObject hardwareDrone;
         public GameObject digitalDrone;
         public int borderx = 300;
         public int bordery = 200;
@@ -58,7 +58,7 @@ namespace Server
         {
             foreach (var drone in socket.GetHardwareDrones())
             {
-                GameObject hd = Instantiate(HardwareDrone, new Vector3(drone.locationX/100.0f, drone.locationZ/50.0f, 10.8f - drone.locationY/100.0f), transform.rotation);
+                GameObject hd = Instantiate(hardwareDrone, new Vector3(drone.locationX/100.0f, drone.locationZ/50.0f, 10.8f - drone.locationY/100.0f), transform.rotation);
                 hd.GetComponent<HardwareDrone>().id = drone.droneId;
                 hd.GetComponentInChildren<FrontLed>().colorFront = drone.colorFront;
                 hd.GetComponentInChildren<BackLed>().colorBack = drone.colorBack;

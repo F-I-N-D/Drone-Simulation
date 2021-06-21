@@ -12,7 +12,7 @@ namespace Server.Models
         public int locationX { get; set; }
         public int locationY { get; set; }
         public int locationZ { get; set; }
-        public float direction { get; set; }
+        public int direction { get; set; }
         public int distanceDown { get; set; }
         public int distanceFront { get; set; }
         public int distanceBack { get; set; }

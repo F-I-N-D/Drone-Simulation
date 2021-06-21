@@ -28,7 +28,7 @@ public class LDR : MonoBehaviour
         {
             lightLevel += (0.2126f*colors[i].r) + (0.7152f * colors[i].g) + (0.0722f * colors[i].b);
         }
-
-        //Debug.Log(lightLevel);
+        lightLevel -= 5800000;
+        Debug.Log(lightLevel);
     }
 }
