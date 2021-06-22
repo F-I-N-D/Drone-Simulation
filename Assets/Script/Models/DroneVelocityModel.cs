@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Server.Models
 {
+    // getter and setters for the velocity data
     public class DroneVelocityModel
     {
         public string droneId { get; set; }

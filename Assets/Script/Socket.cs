@@ -20,7 +20,7 @@ namespace Server
             Server = server;
             Port = port;
         }
-
+        //Create socket and bind to port
         public bool Connect()
         {
             try
@@ -40,7 +40,7 @@ namespace Server
                 return false;
             }
         }
-
+        // through the commando getSoftwareDrone data of the softwareDrone are recieved and put in a list
         public List<DroneDataModel> GetSoftwareDrones()
         {
             var command = new CommandModel
@@ -52,6 +52,7 @@ namespace Server
             string message = RecieveMessage();
             return JSONParser.FromJson<List<DroneDataModel>>(message);
         }
+        // through the commando getHardwareDrone data of the softwareDrone are recieved and put in a list
 
         public List<DroneDataModel> GetHardwareDrones()
         {
@@ -64,6 +65,7 @@ namespace Server
             return JSONParser.FromJson<List<DroneDataModel>>(message);
         }
 
+        // velocity software drone are retrieved using getSoftwareDroneVelocity and a DroneVelocityModel is given
         public DroneVelocityModel GetSoftwareDroneVelocity(string droneId)
         {
             var command = new CommandModel {
@@ -76,6 +78,7 @@ namespace Server
             return JSONParser.FromJson<DroneVelocityModel>(message);
         }
 
+        // method for connecting the software drones to the server.
         public bool ConnectSoftwareDrone(string droneId)
         {
             var command = new CommandModel{
@@ -88,6 +91,7 @@ namespace Server
             return JSONParser.FromJson<DroneConnectResponseModel>(message).connected;
         }
 
+        // for getting the position of the software drones.
         public bool SetSoftwareDrone(string droneId, DroneUpdateModel updateData)
         {
             var command = new CommandModel{
@@ -101,6 +105,7 @@ namespace Server
             return JSONParser.FromJson<DroneUpdateResponseModel>(message).set;
         }
 
+        // sending messages to the server
         private bool SendMessage(CommandModel command)
         {
             try
@@ -117,6 +122,7 @@ namespace Server
             }
         }
 
+        // recieving message from the server
         public string RecieveMessage()
         {
             try
@@ -134,6 +140,7 @@ namespace Server
             }
         }
 
+        //close the socket
         public void Disconnect()
         {
             Stream.Close();

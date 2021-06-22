@@ -7,7 +7,11 @@ public class LDR : MonoBehaviour
     public RenderTexture ldr;
     public float lightLevel;
 
-    // Update is called once per frame
+    // script for ldr using the camera view that's set on the ldr object.
+    // the camera looks at the pixels that can be seen on the ldr object
+    // it stores the the redered texture of the ldr object that's been made before any light signs on it
+    // than it checks how much white pixel it sees
+    // the more the camera see the white pixels the higher the light intensity is
     void Update()
     {
         RenderTexture tmpLDR = RenderTexture.GetTemporary(ldr.width, ldr.height, 0, RenderTextureFormat.Default, RenderTextureReadWrite.Linear);

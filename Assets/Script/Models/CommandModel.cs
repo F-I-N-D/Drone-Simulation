@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Server.Models
 {
+    // get or set the different kind of commando's for retrieving drone data
     public class CommandModel
     {
         public string command { get; set; }

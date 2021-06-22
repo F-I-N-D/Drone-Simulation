@@ -4,18 +4,9 @@ using UnityEngine;
 
 public class DigitalDrone : MonoBehaviour
 {
-    RaycastHit hit;
+    //script for giving an id to unique software drone
+    //float speed for setting the speed of the software drone
     public string id;
     public float speed;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+   
 }

@@ -8,10 +8,7 @@ public class BackLed : MonoBehaviour
     public string colorBack;
     void Start()
     {
-        //Create a new cube primitive to set the color on
-
-
-        //Get the Renderer component from the new cube
+        //Set the color for game object using html value
 
         Color color;
         if (ColorUtility.TryParseHtmlString(colorBack, out color))
@@ -22,11 +19,5 @@ public class BackLed : MonoBehaviour
 
     }
 
-    //Call SetColor using the shader property name "_Color" and setting the color to red
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+ 
 }

@@ -22,8 +22,6 @@ namespace Server
         private int port = 8000;
         private string server = "145.137.51.223";
         Socket socket;
-        // before the first frame update
-        //private HardwareDrone hd;
         public GameObject hardwareDrone;
         public GameObject digitalDrone;
         public int borderx = 300;
@@ -34,6 +32,10 @@ namespace Server
         public static List<GameObject> hardwareDrones = new List<GameObject>();
         public static List<GameObject> softwareDrones = new List<GameObject>();
 
+        // during start a socket is made and is connected to the server
+        // software drones are created and loaded in the simulation
+        // the hardware drones are loaded in the simulation
+        // all the software drones are connected with the server. This loop will go on until all software drones are connected
         void Start()
         {
             socket = new Socket(server, port);
@@ -48,12 +50,15 @@ namespace Server
                 }
             }
         }
+
+        // Every frame the software drone and hardware drone will move
         void Update(){
             MoveSoftwareDrone();
             MoveHardwareDrone();
         }
 
-
+        // method for setting the hardwareDrones in the simulation on the same position as in the real world
+        // the drones have the same led combination as the real hardware drones
         public void CreateHardwareDrone()
         {
             foreach (var drone in socket.GetHardwareDrones())
@@ -66,6 +71,7 @@ namespace Server
             }
         }
 
+        //move the drones with a set velocity that's been given by the server
         public void MoveHardwareDrone()
         {
             foreach (var drone in socket.GetHardwareDrones())
@@ -76,6 +82,9 @@ namespace Server
             }
         }
 
+        // method for setting the softwareDrones in the simulation on random position
+        // the drones have the led combination that are given by the server
+        
         public void CreateSoftwareDrone()
         {
             System.Random rand = new System.Random();
@@ -104,6 +113,7 @@ namespace Server
             socket.SetSoftwareDrone(drone.GetComponent<DigitalDrone>().id, newData);
         }
 
+        // using the id the drones get the right velocity and also gets the right position
         public void MoveSoftwareDrone()
         {
             foreach (var drone in socket.GetSoftwareDrones())

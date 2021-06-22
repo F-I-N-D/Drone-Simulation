@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Server.Models
 {
+    // all the data of the drone can be set and get through this class
     public class DroneDataModel
     {
         public string droneId { get; set; }

@@ -4,18 +4,7 @@ using UnityEngine;
 
 public class HardwareDrone : MonoBehaviour
 {
+    // script for id setting
     public string id;
 
-   
-    void Start()
-    {
-        
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

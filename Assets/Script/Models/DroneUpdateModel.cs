@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Server.Models
 {
+    // all the data of the drone that's been recieved through run time can be set and get through this class
     public class DroneUpdateModel
     {
         public float batteryVoltage { get; set; }
